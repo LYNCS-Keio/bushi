@@ -35,7 +35,7 @@ int motorBpin3 = A5;
 int motorvref3 = 10;//for motor3
 int ch = 0;//motor 場合分け
 int goal = 0;
-
+void motorStop();
 void setup() {
 	mySerial.begin(9600);
 	Serial1.begin(9600);
@@ -76,10 +76,7 @@ void flightpin() {
 			digitalWrite(motorBpin3, LOW);
 			delay(20000);
 			//front
-			digitalWrite(motorApin2, LOW);
-			digitalWrite(motorBpin2, LOW);
-			digitalWrite(motorApin3, LOW);
-			digitalWrite(motorBpin3, LOW);
+			motorStop();
 			//stop
 			//motor front 20sec
 			break;
@@ -307,6 +304,13 @@ void gnss() {
 	}
 }
 
+void motorStop(){
+	digitalWrite(motorApin2, LOW);
+	digitalWrite(motorBpin2, LOW);
+	digitalWrite(motorApin3, LOW);
+	digitalWrite(motorBpin3, LOW);
+}
+
 void motor() {
 	digitalWrite(motorvref2, HIGH);
 	digitalWrite(motorvref3, HIGH);
@@ -322,10 +326,7 @@ void motor() {
 		digitalWrite(motorBpin3, LOW);
 		delay(10000);
 		//front
-		digitalWrite(motorApin2, LOW);
-		digitalWrite(motorBpin2, LOW);
-		digitalWrite(motorApin3, LOW);
-		digitalWrite(motorBpin3, LOW);
+		motorStop();
 		//stop
 		//front
 	}
@@ -343,10 +344,7 @@ void motor() {
 		digitalWrite(motorBpin3, LOW);
 		delay(10000);
 		//front
-		digitalWrite(motorApin2, LOW);
-		digitalWrite(motorBpin2, LOW);
-		digitalWrite(motorApin3, LOW);
-		digitalWrite(motorBpin3, LOW);
+		motorStop();
 		//stop
 		//turnright & front
 	}
@@ -364,10 +362,7 @@ void motor() {
 		digitalWrite(motorBpin3, LOW);
 		delay(10000);
 		//front
-		digitalWrite(motorApin2, LOW);
-		digitalWrite(motorBpin2, LOW);
-		digitalWrite(motorApin3, LOW);
-		digitalWrite(motorBpin3, LOW);
+		motorStop();
 		//stop
 		//turnleft & front
 	}
@@ -386,10 +381,7 @@ void motor() {
 		digitalWrite(motorBpin3, LOW);
 		delay(10000);
 		//front
-		digitalWrite(motorApin2, LOW);
-		digitalWrite(motorBpin2, LOW);
-		digitalWrite(motorApin3, LOW);
-		digitalWrite(motorBpin3, LOW);
+		motorStop();
 		//stop
 		//turnopposite & front
 	}
@@ -408,10 +400,7 @@ void motor() {
 		digitalWrite(motorBpin3, LOW);
 		delay(5000);
 		//front
-		digitalWrite(motorApin2, LOW);
-		digitalWrite(motorBpin2, LOW);
-		digitalWrite(motorApin3, LOW);
-		digitalWrite(motorBpin3, LOW);
+		motorStop();
 		//stop
 		//turnopposite & front
 		//for only half
