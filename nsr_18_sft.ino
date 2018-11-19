@@ -36,6 +36,16 @@ int motorvref3 = 10;//for motor3
 int ch = 0;//motor 場合分け
 int goal = 0;
 void motorStop();
+void motorFront();
+void motorRight();
+void motorLeft();
+enum MotorDirection{
+	kFront = 0,
+	kTurnRight,
+	kTurnLeft,
+	kTurnOpposite,
+	kTurnOppositeAndHalfFront
+};
 void setup() {
 	mySerial.begin(9600);
 	Serial1.begin(9600);
@@ -70,10 +80,7 @@ void flightpin() {
 		val = digitalRead(digitalPin);
 		if (val == HIGH) {
 			delay(36000);
-			digitalWrite(motorApin2, LOW);//左,逆
-			digitalWrite(motorBpin2, HIGH);
-			digitalWrite(motorApin3, HIGH);//右,正
-			digitalWrite(motorBpin3, LOW);
+			motorFront();
 			delay(20000);
 			//front
 			motorStop();
@@ -195,68 +202,68 @@ void gnss() {
 					if ((latup2<latupgo || latun2<latungo) && (lngup2>lngupgo || lngun2>lngungo)) {
 					//右下、下,右の順
 						if ((lats>0) && (lngs>0)) {//右上進行、上,右の順
-							ch = 2;
+							ch = kTurnLeft;
 							//turnleft
 						}
 						if ((lats<0) && (lngs>0)) {//右下進行、下,右の順
-							if (ch == 3) {
-								ch = 4;
+							if (ch == kTurnOpposite) {
+								ch = kTurnOppositeAndHalfFront;
 							}
 							else {
-								ch = 3;
+								ch = kTurnOpposite;
 							}
 							//oppositeturn
 						}
 						if ((lats<0) && (lngs<0)) {//左下進行、下,左の順
-							ch = 1;
+							ch = kTurnRight;
 							//turnright
 						}
 						if ((lats>0) && (lngs<0)) {//左上進行、上,左の順
-							ch = 0;
+							ch = kFront;
 						}
 					}
 					if ((latup2<latupgo || latun2<latungo) && (lngup2<lngupgo || lngun2<lngungo)) {
 					//左下、下,左の順
 						if ((lats>0) && (lngs>0)) {//右上進行、上,右の順
-							ch = 0;
+							ch = kFront;
 						}
 						if ((lats<0) && (lngs>0)) {//右下進行、下,右の順
-							ch = 2;
+							ch = kTurnLeft;
 							//turnleft
 						}
 						if ((lats<0) && (lngs<0)) {//左下進行、下,左の順
-							if (ch == 3) {
-								ch = 4;
+							if (ch == kTurnOpposite) {
+								ch = kTurnOppositeAndHalfFront;
 							}
 							else {
-								ch = 3;
+								ch = kTurnOpposite;
 							}
 							//turnoppsite
 						}
 						if ((lats>0) && (lngs<0)) {//左上進行、上,左の順
-							ch = 1;
+							ch = kTurnRight;
 							//turnright
 						}
 					}
 					if ((latup2>latupgo || latun2>latungo) && (lngup2<lngupgo || lngun2<lngungo)) {
 					//左上、上,左の順
 						if ((lats>0) && (lngs>0)) {//右上進行、上,右の順
-							ch = 1;
+							ch = kTurnRight;
 							//turnright
 						}
 						if ((lats<0) && (lngs>0)) {//右下進行、下,右の順
-							ch = 0;
+							ch = kFront;
 						}
 						if ((lats<0) && (lngs<0)) {//左下進行、下,左の順
-							ch = 2;
+							ch = kTurnLeft;
 							//turnleft
 						}
 						if ((lats>0) && (lngs<0)) {//左上進行、上,左の順
-							if (ch == 3) {
-								ch = 4;
+							if (ch == kTurnOpposite) {
+								ch = kTurnOppositeAndHalfFront;
 							}
 							else {
-								ch = 3;
+								ch = kTurnOpposite;
 							}
 							//turnopposite
 						}
@@ -264,24 +271,24 @@ void gnss() {
 					if ((latup2>latupgo || latun2>latungo) && (lngup2>lngupgo || lngun2>lngungo)) {
 					//右上、上,右の順
 						if ((lats>0) && (lngs>0)) {//右上進行、上,右の順
-							if (ch == 3) {
-								ch = 4;
+							if (ch == kTurnOpposite) {
+								ch = kTurnOppositeAndHalfFront;
 							}
 							else {
-								ch = 3;
+								ch = kTurnOpposite;
 							}
 							//turnopposite
 						}
 						if ((lats<0) && (lngs>0)) {//右下進行、下,右の順
-							ch = 1;
+							ch = kTurnRight;
 							//turnright
 						}
 						if ((lats<0) && (lngs<0)) {//左下進行、下,左の順
-							ch = 0;
+							ch = kFront;
 							//
 						}
 						if ((lats>0) && (lngs<0)) {//左上進行、上,左の順
-							ch = 2;
+							ch = kTurnLeft;
 							//turnleft
 						}
 					}
@@ -310,7 +317,24 @@ void motorStop(){
 	digitalWrite(motorApin3, LOW);
 	digitalWrite(motorBpin3, LOW);
 }
-
+void motorFront(){
+	digitalWrite(motorApin2, LOW);//左,逆
+	digitalWrite(motorBpin2, HIGH);
+	digitalWrite(motorApin3, HIGH);//右,正
+	digitalWrite(motorBpin3, LOW);
+}
+void motorRight(){
+	digitalWrite(motorApin2, LOW);//左,逆
+	digitalWrite(motorBpin2, HIGH);
+	digitalWrite(motorApin3, LOW);//右,正
+	digitalWrite(motorBpin3, LOW);
+}
+void motorLeft(){
+	digitalWrite(motorApin2, LOW);//左,逆
+	digitalWrite(motorBpin2, LOW);
+	digitalWrite(motorApin3, HIGH);//右,正
+	digitalWrite(motorBpin3, LOW);
+}
 void motor() {
 	digitalWrite(motorvref2, HIGH);
 	digitalWrite(motorvref3, HIGH);
@@ -319,85 +343,52 @@ void motor() {
 	//2_back,3_front = cansat_front
 	//2_back,3_back = cansat_turning_right
 	//2 = left & awkward , 3 = right & correct
-	if (ch == 0) {
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, HIGH);//右,正
-		digitalWrite(motorBpin3, LOW);
+	if (ch == kFront) {
+		motorFront();
 		delay(10000);
 		//front
 		motorStop();
 		//stop
 		//front
 	}
-	else if (ch == 1) {
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, LOW);//右,正
-		digitalWrite(motorBpin3, LOW);
+	else if (ch == kTurnRight) {
+		motorRight();
 		delay(1000);
-		//2_back,3_back = cansat_turning_right
-
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, HIGH);//右,正
-		digitalWrite(motorBpin3, LOW);
+		//2_back,38_back = cansat_turning_right
+		motorFront();
 		delay(10000);
-		//front
 		motorStop();
-		//stop
 		//turnright & front
 	}
-	else if (ch == 2) {
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, LOW);
-		digitalWrite(motorApin3, HIGH);//右,正
-		digitalWrite(motorBpin3, LOW);
+	else if (ch == kTurnLeft) {
+		motorLeft();
 		delay(1000);
 		//2_front,3_front = cansat_turning_left
-
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, HIGH);//右,正
-		digitalWrite(motorBpin3, LOW);
+		motorFront();
 		delay(10000);
 		//front
 		motorStop();
 		//stop
 		//turnleft & front
 	}
-	else if (ch == 3) {
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, LOW);//右,正
-		digitalWrite(motorBpin3, LOW);
+	else if (ch == kTurnOpposite) {
+		motorRight();
 		delay(2000);
 		//2_back,3_back = cansat_turning_right
 		//秒数2倍で180度
-
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, HIGH);//右,正
-		digitalWrite(motorBpin3, LOW);
+		motorFront();
 		delay(10000);
 		//front
 		motorStop();
 		//stop
 		//turnopposite & front
 	}
-	else if (ch == 4) {
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, LOW);//右,正
-		digitalWrite(motorBpin3, LOW);
+	else if (ch == kTurnOppositeAndHalfFront) {
+		motorRight();
 		delay(2000);
 		//2_back,3_back = cansat_turning_right
 		//秒数2倍
-
-		digitalWrite(motorApin2, LOW);//左,逆
-		digitalWrite(motorBpin2, HIGH);
-		digitalWrite(motorApin3, HIGH);//右,正
-		digitalWrite(motorBpin3, LOW);
+		motorFront();
 		delay(5000);
 		//front
 		motorStop();
