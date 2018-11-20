@@ -33,12 +33,6 @@ int motorvref2 = 9;//for motor2
 int motorApin3 = A4;
 int motorBpin3 = A5;
 int motorvref3 = 10;//for motor3
-int ch = 0;//motor 場合分け
-int goal = 0;
-void motorStop();
-void motorFront();
-void motorRight();
-void motorLeft();
 enum MotorDirection{
 	kFront = 0,
 	kTurnRight,
@@ -46,6 +40,12 @@ enum MotorDirection{
 	kTurnOpposite,
 	kTurnOppositeAndHalfFront
 };
+MotorDirection ch = kFront;//motor 場合分け
+void motorStop();
+void motorFront();
+void motorRight();
+void motorLeft();
+int goal = 0;
 void setup() {
 	mySerial.begin(9600);
 	Serial1.begin(9600);
