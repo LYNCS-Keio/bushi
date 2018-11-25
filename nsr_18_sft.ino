@@ -343,15 +343,17 @@ void motor() {
 	//2_back,3_front = cansat_front
 	//2_back,3_back = cansat_turning_right
 	//2 = left & awkward , 3 = right & correct
-	if (ch == kFront) {
+	switch (ch)
+	{
+	case kFront:
 		motorFront();
 		delay(10000);
 		//front
 		motorStop();
 		//stop
 		//front
-	}
-	else if (ch == kTurnRight) {
+		break;
+	case kTurnRight:
 		motorRight();
 		delay(1000);
 		//2_back,38_back = cansat_turning_right
@@ -359,8 +361,8 @@ void motor() {
 		delay(10000);
 		motorStop();
 		//turnright & front
-	}
-	else if (ch == kTurnLeft) {
+		break;
+	case kTurnLeft:
 		motorLeft();
 		delay(1000);
 		//2_front,3_front = cansat_turning_left
@@ -370,8 +372,8 @@ void motor() {
 		motorStop();
 		//stop
 		//turnleft & front
-	}
-	else if (ch == kTurnOpposite) {
+		break;
+	case kTurnOpposite:
 		motorRight();
 		delay(2000);
 		//2_back,3_back = cansat_turning_right
@@ -382,8 +384,8 @@ void motor() {
 		motorStop();
 		//stop
 		//turnopposite & front
-	}
-	else if (ch == kTurnOppositeAndHalfFront) {
+		break;
+	case kTurnOppositeAndHalfFront:
 		motorRight();
 		delay(2000);
 		//2_back,3_back = cansat_turning_right
@@ -395,6 +397,7 @@ void motor() {
 		//stop
 		//turnopposite & front
 		//for only half
+		break;
 	}
 }
 
